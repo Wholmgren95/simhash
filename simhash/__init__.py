@@ -165,7 +165,7 @@ class Simhash(object):
 
 class SimhashIndex(object):
 
-    def __init__(self, objs, f=64, k=2, log=None):
+    def __init__(self, objs, f=64, k=2, blocks=None,log=None):
         """
         `objs` is a list of (obj_id, simhash)
         obj_id is a string, simhash is an instance of Simhash
@@ -174,6 +174,10 @@ class SimhashIndex(object):
         """
         self.k = k
         self.f = f
+        if blocks:
+            self.blocks = blocks
+        else:
+            self.blocks = k+1
         count = len(objs)
 
         if log is None:
@@ -243,7 +247,7 @@ class SimhashIndex(object):
         """
         You may optimize this method according to <http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/33026.pdf>
         """
-        return [self.f // (self.k + 1) * i for i in range(self.k + 1)]
+        return [self.f // (self.blocks) * i for i in range(self.blocks)]
 
     def get_keys(self, simhash):
         for i, offset in enumerate(self.offsets):
